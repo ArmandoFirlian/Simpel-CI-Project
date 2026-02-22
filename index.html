@@ -5,14 +5,10 @@
 
 <style>
 body {
-  font-family: Arial, sans-serif;
+  font-family: Arial;
   text-align: center;
   background: #222;
   color: white;
-}
-
-h1 {
-  margin-top: 20px;
 }
 
 #board {
@@ -25,8 +21,8 @@ h1 {
 input {
   width: 50px;
   height: 50px;
-  text-align: center;
   font-size: 20px;
+  text-align: center;
   border: 1px solid #999;
   background: #f5f5f5;
 }
@@ -37,33 +33,36 @@ input {
   font-weight: bold;
 }
 
-input:focus {
-  background: #fff3a0;
-  outline: none;
+.highlight {
+  background: #ffe066 !important;
 }
 
-button {
-  margin-top: 20px;
-  padding: 10px 20px;
+button, select {
+  margin-top: 15px;
+  padding: 10px;
   font-size: 16px;
-  cursor: pointer;
 }
 </style>
-  
 </head>
 
 <body>
 
-<h1>🧩 Game Sudoku</h1>
-<p>Isi angka 1-9 tanpa duplikat di baris, kolom, dan kotak</p>
+<h1>🧩 Sudoku Game</h1>
+<h2 id="timer">Time: 0</h2>
+
+<select id="difficulty">
+  <option value="easy">Easy</option>
+  <option value="medium" selected>Medium</option>
+  <option value="hard">Hard</option>
+</select>
+
+<br>
 
 <div id="board"></div>
 
 <button onclick="cekJawaban()">Cek Jawaban</button>
 <button onclick="generateSudoku()">Puzzle Baru</button>
-  
-<script src="script.js"></script>  
-  
+
+<script src="script.js"></script>
 </body>
 </html>
-
