@@ -3,6 +3,7 @@ let solusi = [];
 let timer = 0;
 let interval;
 let hintLimit = 5;
+let selectedCell = null;
 
 /* ================= TIMER ================= */
 
@@ -17,7 +18,7 @@ function startTimer() {
   }, 1000);
 }
 
-/* ================= GENERATOR ================= */
+/* ================= GENERATOR SOLUSI ================= */
 
 function shuffle(arr) {
   return arr.sort(() => Math.random() - 0.5);
@@ -30,28 +31,29 @@ function buatSolusi() {
     for (let i = 0; i < 9; i++)
       if (grid[r][i] === n || grid[i][c] === n) return false;
 
-    let sr = Math.floor(r/3)*3;
-    let sc = Math.floor(c/3)*3;
+    let sr = Math.floor(r / 3) * 3;
+    let sc = Math.floor(c / 3) * 3;
 
-    for (let i=0;i<3;i++)
-      for (let j=0;j<3;j++)
-        if(grid[sr+i][sc+j]===n) return false;
+    for (let i = 0; i < 3; i++)
+      for (let j = 0; j < 3; j++)
+        if (grid[sr + i][sc + j] === n) return false;
 
     return true;
   }
 
-  function fill(pos=0){
-    if(pos===81) return true;
-    let r=Math.floor(pos/9);
-    let c=pos%9;
+  function fill(pos = 0) {
+    if (pos === 81) return true;
 
-    let nums = shuffle([1,2,3,4,5,6,7,8,9]);
+    let r = Math.floor(pos / 9);
+    let c = pos % 9;
 
-    for(let n of nums){
-      if(valid(r,c,n)){
-        grid[r][c]=n;
-        if(fill(pos+1)) return true;
-        grid[r][c]=0;
+    let nums = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+
+    for (let n of nums) {
+      if (valid(r, c, n)) {
+        grid[r][c] = n;
+        if (fill(pos + 1)) return true;
+        grid[r][c] = 0;
       }
     }
     return false;
@@ -61,49 +63,16 @@ function buatSolusi() {
   return grid;
 }
 
-/* ================= BOARD ================= */
-
-function tampilkanBoard(puzzle) {
-  board.innerHTML = "";
-
-  for (let r=0;r<9;r++){
-    for (let c=0;c<9;c++){
-
-      let input = document.createElement("input");
-      input.id = r+"-"+c;
-      input.maxLength = 1;
-
-      if(puzzle[r][c]!==0){
-        input.value = puzzle[r][c];
-        input.disabled = true;
-        input.classList.add("fixed");
-      }
-
-      // garis tebal
-      if (r % 3 === 0) input.style.borderTop = "3px solid black";
-      if (c % 3 === 0) input.style.borderLeft = "3px solid black";
-      if (r === 8) input.style.borderBottom = "3px solid black";
-      if (c === 8) input.style.borderRight = "3px solid black";
-
-      input.addEventListener("focus", () => highlight(r,c));
-
-      board.appendChild(input);
-    }
-  }
-}
-// ======================
-// BUAT PUZZLE
-// ======================
+/* ================= BUAT PUZZLE ================= */
 
 function generateSudoku() {
   hintLimit = 5;
   updateHintUI();
-
   board.innerHTML = "";
 
-  let grid = Array(9).fill().map(() => Array(9).fill(0));
-  solve(grid);
+  startTimer();
 
+  let grid = buatSolusi();
   solusi = grid.map(r => [...r]);
 
   // hapus angka random
@@ -116,11 +85,12 @@ function generateSudoku() {
   drawBoard(grid);
 }
 
+/* ================= GAMBAR BOARD ================= */
+
 function drawBoard(grid) {
   for (let r = 0; r < 9; r++) {
     for (let c = 0; c < 9; c++) {
       let input = document.createElement("input");
-
       input.id = r + "-" + c;
       input.maxLength = 1;
 
@@ -141,9 +111,7 @@ function drawBoard(grid) {
   }
 }
 
-// ======================
-// CEK JAWABAN
-// ======================
+/* ================= CEK JAWABAN ================= */
 
 function cekJawaban() {
   let benar = true;
@@ -161,9 +129,7 @@ function cekJawaban() {
   alert(benar ? "🎉 BENAR!" : "❌ Masih ada yang salah!");
 }
 
-// ======================
-// HINT SYSTEM (LIMIT 5)
-// ======================
+/* ================= HINT SYSTEM ================= */
 
 function hint() {
   if (hintLimit <= 0) {
@@ -178,7 +144,7 @@ function hint() {
       let cell = document.getElementById(r + "-" + c);
 
       if (!cell.disabled && parseInt(cell.value) !== solusi[r][c]) {
-        kosong.push({r, c});
+        kosong.push({ r, c });
       }
     }
   }
@@ -203,14 +169,13 @@ function updateHintUI() {
     "Hint tersisa: " + hintLimit;
 }
 
-let selectedCell = null;
+/* ================= HIGHLIGHT CELL ================= */
 
-board.addEventListener("click", function(e) {
+board.addEventListener("click", function (e) {
   if (e.target.tagName !== "INPUT") return;
 
   let cell = e.target;
 
-  // kalau klik lagi → unselect
   if (selectedCell === cell) {
     clearHighlight();
     selectedCell = null;
@@ -241,5 +206,6 @@ function highlight(cell) {
   }
 }
 
-// START GAME
+/* ================= START GAME ================= */
+
 generateSudoku();
