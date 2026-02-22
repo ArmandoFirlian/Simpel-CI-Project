@@ -1,15 +1,3 @@
-const puzzle = [
-[5,3,0,0,7,0,0,0,0],
-[6,0,0,1,9,5,0,0,0],
-[0,9,8,0,0,0,0,6,0],
-[8,0,0,0,6,0,0,0,3],
-[4,0,0,8,0,3,0,0,1],
-[7,0,0,0,2,0,0,0,6],
-[0,6,0,0,0,0,2,8,0],
-[0,0,0,4,1,9,0,0,5],
-[0,0,0,0,8,0,0,7,9]
-];
-
 const solusi = [
 [5,3,4,6,7,8,9,1,2],
 [6,7,2,1,9,5,3,4,8],
@@ -22,9 +10,27 @@ const solusi = [
 [3,4,5,2,8,6,1,7,9]
 ];
 
+let puzzle = [];
+
 const board = document.getElementById("board");
 
+function generatePuzzle() {
+  board.innerHTML = "";
+
+  puzzle = solusi.map(row => [...row]);
+
+  for (let i = 0; i < 40; i++) {
+    let r = Math.floor(Math.random() * 9);
+    let c = Math.floor(Math.random() * 9);
+    puzzle[r][c] = 0;
+  }
+
+  buatBoard();
+}
+
 function buatBoard() {
+  board.innerHTML = "";
+
   for (let r = 0; r < 9; r++) {
     for (let c = 0; c < 9; c++) {
       const input = document.createElement("input");
@@ -36,11 +42,12 @@ function buatBoard() {
       }
 
       input.id = r + "-" + c;
-      // garis tebal sudoku
-        if (r % 3 === 0) input.style.borderTop = "3px solid black";
-        if (c % 3 === 0) input.style.borderLeft = "3px solid black";
-        if (r === 8) input.style.borderBottom = "3px solid black";
-        if (c === 8) input.style.borderRight = "3px solid black";
+
+      if (r % 3 === 0) input.style.borderTop = "3px solid black";
+      if (c % 3 === 0) input.style.borderLeft = "3px solid black";
+      if (r === 8) input.style.borderBottom = "3px solid black";
+      if (c === 8) input.style.borderRight = "3px solid black";
+
       input.maxLength = 1;
       board.appendChild(input);
     }
@@ -60,11 +67,8 @@ function cekJawaban() {
     }
   }
 
-  if (benar) {
-    alert("🎉 SELAMAT! Kamu benar!");
-  } else {
-    alert("❌ Masih ada yang salah!");
-  }
+  if (benar) alert("🎉 BENAR!");
+  else alert("❌ Masih ada yang salah!");
 }
 
-buatBoard();
+generatePuzzle();
