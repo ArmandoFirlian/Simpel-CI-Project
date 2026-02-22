@@ -1,4 +1,7 @@
-const solusi = [
+let solusi = [];
+let puzzle = [];
+
+const baseSolusi = [
 [5,3,4,6,7,8,9,1,2],
 [6,7,2,1,9,5,3,4,8],
 [1,9,8,3,4,2,5,6,7],
@@ -10,16 +13,29 @@ const solusi = [
 [3,4,5,2,8,6,1,7,9]
 ];
 
-let puzzle = [];
-
 const board = document.getElementById("board");
+
+function shuffleNumbers() {
+  let nums = [1,2,3,4,5,6,7,8,9];
+  nums.sort(() => Math.random() - 0.5);
+  return nums;
+}
 
 function generatePuzzle() {
   board.innerHTML = "";
 
+  let map = shuffleNumbers();
+
+  // buat solusi baru random
+  solusi = baseSolusi.map(row =>
+    row.map(n => map[n - 1])
+  );
+
+  // copy jadi puzzle
   puzzle = solusi.map(row => [...row]);
 
-  for (let i = 0; i < 40; i++) {
+  // hapus random 45 kotak
+  for (let i = 0; i < 45; i++) {
     let r = Math.floor(Math.random() * 9);
     let c = Math.floor(Math.random() * 9);
     puzzle[r][c] = 0;
