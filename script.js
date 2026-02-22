@@ -36,6 +36,11 @@ function buatBoard() {
       }
 
       input.id = r + "-" + c;
+      // garis tebal sudoku
+        if (r % 3 === 0) input.style.borderTop = "3px solid black";
+        if (c % 3 === 0) input.style.borderLeft = "3px solid black";
+        if (r === 8) input.style.borderBottom = "3px solid black";
+        if (c === 8) input.style.borderRight = "3px solid black";
       input.maxLength = 1;
       board.appendChild(input);
     }
