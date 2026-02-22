@@ -1,39 +1,47 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Hello CI</title>
+<title>Game Sudoku</title>
 
 <style>
 body {
   font-family: Arial, sans-serif;
   text-align: center;
-  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  background: #222;
   color: white;
-  margin-top: 100px;
 }
 
-.card {
-  background: rgba(255,255,255,0.1);
-  padding: 40px;
-  border-radius: 20px;
-  width: 350px;
-  margin: auto;
-  backdrop-filter: blur(10px);
+h1 {
+  margin-top: 20px;
+}
+
+#board {
+  display: grid;
+  grid-template-columns: repeat(9, 40px);
+  gap: 2px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+input {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  font-size: 18px;
+  border: none;
+}
+
+.fixed {
+  background: #555;
+  color: white;
+  font-weight: bold;
 }
 
 button {
-  padding: 12px 25px;
+  margin-top: 20px;
+  padding: 10px 20px;
   font-size: 16px;
-  border: none;
-  border-radius: 8px;
-  background: #ffcc00;
   cursor: pointer;
-  transition: 0.3s;
-}
-
-button:hover {
-  background: orange;
-  transform: scale(1.1);
 }
 </style>
 
@@ -41,12 +49,16 @@ button:hover {
 
 <body>
 
-<div class="card">
-  <h1> Halo GitHub Actions</h1>
-  <p>Website CI pertama gue </p>
+<h1>🧩 Game Sudoku</h1>
+<p>Isi angka 1-9 tanpa duplikat di baris, kolom, dan kotak</p>
 
-  <button onclick="tampil()">Klik Aku</button>
-</div>
+<div id="board"></div>
+
+<button onclick="cekJawaban()">Cek Jawaban</button>
+
+</body>
+</html>
+
 
 </body>
 </html>
