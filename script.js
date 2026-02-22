@@ -1,90 +1,105 @@
 let solusi = [];
 let puzzle = [];
 
-const baseSolusi = [
-[5,3,4,6,7,8,9,1,2],
-[6,7,2,1,9,5,3,4,8],
-[1,9,8,3,4,2,5,6,7],
-[8,5,9,7,6,1,4,2,3],
-[4,2,6,8,5,3,7,9,1],
-[7,1,3,9,2,4,8,5,6],
-[9,6,1,5,3,7,2,8,4],
-[2,8,7,4,1,9,6,3,5],
-[3,4,5,2,8,6,1,7,9]
+const base = [
+[1,2,3,4,5,6,7,8,9],
+[4,5,6,7,8,9,1,2,3],
+[7,8,9,1,2,3,4,5,6],
+[2,3,4,5,6,7,8,9,1],
+[5,6,7,8,9,1,2,3,4],
+[8,9,1,2,3,4,5,6,7],
+[3,4,5,6,7,8,9,1,2],
+[6,7,8,9,1,2,3,4,5],
+[9,1,2,3,4,5,6,7,8]
 ];
 
 const board = document.getElementById("board");
 
-function shuffleNumbers() {
-  let nums = [1,2,3,4,5,6,7,8,9];
-  nums.sort(() => Math.random() - 0.5);
-  return nums;
+function shuffle(arr){
+  return arr.sort(()=>Math.random()-0.5);
 }
 
-function generatePuzzle() {
-  board.innerHTML = "";
+function generateSudoku(){
+  board.innerHTML="";
 
-  let map = shuffleNumbers();
+  let nums = shuffle([1,2,3,4,5,6,7,8,9]);
 
-  // buat solusi baru random
-  solusi = baseSolusi.map(row =>
-    row.map(n => map[n - 1])
+  // mapping angka random
+  solusi = base.map(row =>
+    row.map(n => nums[n-1])
   );
 
-  // copy jadi puzzle
-  puzzle = solusi.map(row => [...row]);
+  // shuffle baris per blok
+  for(let b=0;b<3;b++){
+    let rows = shuffle([0,1,2]);
+    for(let i=0;i<3;i++){
+      [solusi[b*3+i], solusi[b*3+rows[i]]] =
+      [solusi[b*3+rows[i]], solusi[b*3+i]];
+    }
+  }
 
-  // hapus random 45 kotak
-  for (let i = 0; i < 45; i++) {
-    let r = Math.floor(Math.random() * 9);
-    let c = Math.floor(Math.random() * 9);
-    puzzle[r][c] = 0;
+  // shuffle kolom per blok
+  for(let b=0;b<3;b++){
+    let cols = shuffle([0,1,2]);
+    for(let r=0;r<9;r++){
+      for(let i=0;i<3;i++){
+        let c1=b*3+i;
+        let c2=b*3+cols[i];
+        [solusi[r][c1], solusi[r][c2]] =
+        [solusi[r][c2], solusi[r][c1]];
+      }
+    }
+  }
+
+  puzzle = solusi.map(r=>[...r]);
+
+  // hapus random
+  for(let i=0;i<45;i++){
+    let r=Math.floor(Math.random()*9);
+    let c=Math.floor(Math.random()*9);
+    puzzle[r][c]=0;
   }
 
   buatBoard();
 }
 
-function buatBoard() {
-  board.innerHTML = "";
+function buatBoard(){
+  board.innerHTML="";
 
-  for (let r = 0; r < 9; r++) {
-    for (let c = 0; c < 9; c++) {
-      const input = document.createElement("input");
+  for(let r=0;r<9;r++){
+    for(let c=0;c<9;c++){
+      let input=document.createElement("input");
 
-      if (puzzle[r][c] !== 0) {
-        input.value = puzzle[r][c];
-        input.disabled = true;
+      if(puzzle[r][c]!==0){
+        input.value=puzzle[r][c];
+        input.disabled=true;
         input.classList.add("fixed");
       }
 
-      input.id = r + "-" + c;
+      input.id=r+"-"+c;
 
-      if (r % 3 === 0) input.style.borderTop = "3px solid black";
-      if (c % 3 === 0) input.style.borderLeft = "3px solid black";
-      if (r === 8) input.style.borderBottom = "3px solid black";
-      if (c === 8) input.style.borderRight = "3px solid black";
+      if(r%3===0) input.style.borderTop="3px solid black";
+      if(c%3===0) input.style.borderLeft="3px solid black";
+      if(r===8) input.style.borderBottom="3px solid black";
+      if(c===8) input.style.borderRight="3px solid black";
 
-      input.maxLength = 1;
+      input.maxLength=1;
       board.appendChild(input);
     }
   }
 }
 
-function cekJawaban() {
-  let benar = true;
+function cekJawaban(){
+  let benar=true;
 
-  for (let r = 0; r < 9; r++) {
-    for (let c = 0; c < 9; c++) {
-      let input = document.getElementById(r + "-" + c);
-
-      if (parseInt(input.value) !== solusi[r][c]) {
-        benar = false;
-      }
+  for(let r=0;r<9;r++){
+    for(let c=0;c<9;c++){
+      let val=parseInt(document.getElementById(r+"-"+c).value);
+      if(val!==solusi[r][c]) benar=false;
     }
   }
 
-  if (benar) alert("🎉 BENAR!");
-  else alert("❌ Masih ada yang salah!");
+  alert(benar?"🎉 BENAR!":"❌ Masih salah!");
 }
 
-generatePuzzle();
+generateSudoku();
