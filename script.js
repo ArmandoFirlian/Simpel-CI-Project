@@ -1,4 +1,6 @@
 const board = document.getElementById("board");
+const difficultySelect = document.getElementById("difficulty");
+
 let solusi = [];
 let timer = 0;
 let interval;
@@ -47,7 +49,7 @@ function buatSolusi() {
     let r = Math.floor(pos / 9);
     let c = pos % 9;
 
-    let nums = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    let nums = shuffle([1,2,3,4,5,6,7,8,9]);
 
     for (let n of nums) {
       if (valid(r, c, n)) {
@@ -63,26 +65,50 @@ function buatSolusi() {
   return grid;
 }
 
+/* ================= DIFFICULTY ================= */
+
+function getDifficultyHoles() {
+  const diff = difficultySelect.value;
+
+  if (diff === "easy") return 35;
+  if (diff === "medium") return 45;
+  return 55; // hard
+}
+
 /* ================= BUAT PUZZLE ================= */
 
 function generateSudoku() {
   hintLimit = 5;
   updateHintUI();
   board.innerHTML = "";
-
   startTimer();
 
   let grid = buatSolusi();
   solusi = grid.map(r => [...r]);
 
-  // hapus angka random
-  for (let i = 0; i < 45; i++) {
+  let holes = getDifficultyHoles();
+
+  while (holes > 0) {
     let r = Math.floor(Math.random() * 9);
     let c = Math.floor(Math.random() * 9);
-    grid[r][c] = 0;
+
+    if (grid[r][c] !== 0) {
+      grid[r][c] = 0;
+      holes--;
+    }
   }
 
   drawBoard(grid);
+}
+
+/* ================= INPUT VALIDATION ================= */
+
+function validateInput(e) {
+  let value = e.target.value;
+
+  if (!/^[1-9]$/.test(value)) {
+    e.target.value = "";
+  }
 }
 
 /* ================= GAMBAR BOARD ================= */
@@ -91,6 +117,7 @@ function drawBoard(grid) {
   for (let r = 0; r < 9; r++) {
     for (let c = 0; c < 9; c++) {
       let input = document.createElement("input");
+
       input.id = r + "-" + c;
       input.maxLength = 1;
 
@@ -98,6 +125,8 @@ function drawBoard(grid) {
         input.value = grid[r][c];
         input.disabled = true;
         input.classList.add("fixed");
+      } else {
+        input.addEventListener("input", validateInput);
       }
 
       // garis sudoku
@@ -129,11 +158,11 @@ function cekJawaban() {
   alert(benar ? "🎉 BENAR!" : "❌ Masih ada yang salah!");
 }
 
-/* ================= HINT SYSTEM ================= */
+/* ================= HINT ================= */
 
 function hint() {
   if (hintLimit <= 0) {
-    alert("Hint sudah habis!");
+    alert("Hint habis!");
     return;
   }
 
@@ -149,10 +178,7 @@ function hint() {
     }
   }
 
-  if (kosong.length === 0) {
-    alert("Sudah penuh!");
-    return;
-  }
+  if (kosong.length === 0) return;
 
   let pick = kosong[Math.floor(Math.random() * kosong.length)];
   let cell = document.getElementById(pick.r + "-" + pick.c);
@@ -169,7 +195,7 @@ function updateHintUI() {
     "Hint tersisa: " + hintLimit;
 }
 
-/* ================= HIGHLIGHT CELL ================= */
+/* ================= HIGHLIGHT ================= */
 
 board.addEventListener("click", function (e) {
   if (e.target.tagName !== "INPUT") return;
@@ -188,8 +214,7 @@ board.addEventListener("click", function (e) {
 
 function clearHighlight() {
   document.querySelectorAll("input").forEach(c => {
-    c.classList.remove("selected");
-    c.classList.remove("highlight");
+    c.classList.remove("selected", "highlight");
   });
 }
 
@@ -206,6 +231,6 @@ function highlight(cell) {
   }
 }
 
-/* ================= START GAME ================= */
+/* ================= START ================= */
 
 generateSudoku();
