@@ -1,5 +1,5 @@
-import { buatSolusi } from "./generator.js";
-import { drawBoard } from "./ui.js";
+import { buatSolusi } from "javascript/generator.js";
+import { drawBoard } from "javascript/ui.js";
 
 let solusi = [];
 let hintLimit = 5;
