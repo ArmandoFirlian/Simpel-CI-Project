@@ -1,17 +1,25 @@
-import { startGame, checkAnswer, giveHint } from "./game.js";
+// generator.js
 
-const board = document.getElementById("board");
-const difficulty = document.getElementById("difficulty");
-const hintUI = document.getElementById("hintCounter");
+export function buatSolusi() {
+  const base = 3;
+  const side = base * base;
 
-document.getElementById("newBtn")
-  .addEventListener("click", () => startGame(board, difficulty, hintUI));
+  function shuffle(arr) {
+    return arr.sort(() => Math.random() - 0.5);
+  }
 
-document.getElementById("checkBtn")
-  .addEventListener("click", checkAnswer);
+  function pattern(r, c) {
+    return (base * (r % base) + Math.floor(r / base) + c) % side;
+  }
 
-document.getElementById("hintBtn")
-  .addEventListener("click", () => giveHint(hintUI));
+  const rBase = [0, 1, 2];
+  const rows = shuffle(rBase.flatMap(g => shuffle(rBase).map(r => g * base + r)));
+  const cols = shuffle(rBase.flatMap(g => shuffle(rBase).map(c => g * base + c)));
+  const nums = shuffle([1,2,3,4,5,6,7,8,9]);
 
-// Start pertama kali
-startGame(board, difficulty, hintUI);
+  return rows.map(r =>
+    cols.map(c =>
+      nums[pattern(r, c)]
+    )
+  );
+}
