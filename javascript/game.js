@@ -1,17 +1,87 @@
-import { startGame, checkAnswer, giveHint } from "./game.js";
+import { buatSolusi } from "./generator.js";
+import { drawBoard } from "./ui.js";
 
-const board = document.getElementById("board");
-const difficulty = document.getElementById("difficulty");
-const hintUI = document.getElementById("hintCounter");
+let solusi = [];
+let hintLimit = 5;
+let timer = 0;
+let interval;
 
-document.getElementById("newBtn")
-  .addEventListener("click", () => startGame(board, difficulty, hintUI));
+export function startGame(boardElement, difficultySelect, hintUI) {
+  hintLimit = 5;
+  hintUI.innerText = "Hint tersisa: 5";
 
-document.getElementById("checkBtn")
-  .addEventListener("click", checkAnswer);
+  clearInterval(interval);
+  timer = 0;
 
-document.getElementById("hintBtn")
-  .addEventListener("click", () => giveHint(hintUI));
+  let grid = buatSolusi();
+  solusi = grid.map(r => [...r]);
 
-// Start pertama kali
-startGame(board, difficulty, hintUI);
+  let holes = getDifficulty(difficultySelect.value);
+
+  while (holes > 0) {
+    let r = Math.floor(Math.random() * 9);
+    let c = Math.floor(Math.random() * 9);
+    if (grid[r][c] !== 0) {
+      grid[r][c] = 0;
+      holes--;
+    }
+  }
+
+  drawBoard(boardElement, grid, solusi, validateInput);
+}
+
+function getDifficulty(diff) {
+  if (diff === "easy") return 35;
+  if (diff === "medium") return 45;
+  return 55;
+}
+
+function validateInput(e) {
+  if (!/^[1-9]$/.test(e.target.value)) {
+    e.target.value = "";
+  }
+}
+
+export function checkAnswer() {
+  let benar = true;
+
+  for (let r = 0; r < 9; r++) {
+    for (let c = 0; c < 9; c++) {
+      let input = document.getElementById(r + "-" + c);
+      if (parseInt(input.value) !== solusi[r][c]) {
+        benar = false;
+      }
+    }
+  }
+
+  alert(benar ? "🎉 BENAR!" : "❌ Masih ada yang salah!");
+}
+
+export function giveHint(hintUI) {
+  if (hintLimit <= 0) {
+    alert("Hint habis!");
+    return;
+  }
+
+  let kosong = [];
+
+  for (let r = 0; r < 9; r++) {
+    for (let c = 0; c < 9; c++) {
+      let cell = document.getElementById(r + "-" + c);
+      if (!cell.disabled && parseInt(cell.value) !== solusi[r][c]) {
+        kosong.push({ r, c });
+      }
+    }
+  }
+
+  if (kosong.length === 0) return;
+
+  let pick = kosong[Math.floor(Math.random() * kosong.length)];
+  let cell = document.getElementById(pick.r + "-" + pick.c);
+
+  cell.value = solusi[pick.r][pick.c];
+  cell.classList.add("hint");
+
+  hintLimit--;
+  hintUI.innerText = "Hint tersisa: " + hintLimit;
+}
