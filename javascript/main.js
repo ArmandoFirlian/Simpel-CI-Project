@@ -1,4 +1,4 @@
-import { startGame, checkAnswer, giveHint } from "javascript/game.js";
+import { startGame, checkAnswer, giveHint } from "./game.js";
 
 const board = document.getElementById("board");
 const difficulty = document.getElementById("difficulty");
