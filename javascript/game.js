@@ -37,8 +37,24 @@ function getDifficulty(diff) {
 }
 
 function validateInput(e) {
-  if (!/^[1-9]$/.test(e.target.value)) {
-    e.target.value = "";
+  const input = e.target;
+  const value = input.value;
+  const [r, c] = input.id.split("-").map(Number);
+
+  // hanya boleh 1-9
+  if (!/^[1-9]$/.test(value)) {
+    input.value = "";
+    input.classList.remove("error", "correct");
+    return;
+  }
+
+  // cek ke solusi
+  if (parseInt(value) === solusi[r][c]) {
+    input.classList.remove("error");
+    input.classList.add("correct");
+  } else {
+    input.classList.remove("correct");
+    input.classList.add("error");
   }
 }
 
