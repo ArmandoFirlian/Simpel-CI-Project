@@ -17,9 +17,9 @@ export function startGame(boardElement, difficultySelect, hintUI) {
   timerUI.innerText = "Time: 0s";
 
   interval = setInterval(() => {
-    timer++;
-    timerUI.innerText = "Time: " + timer + "s";
-  }, 1000);
+  timer++;
+  document.getElementById("timer").innerText = "Time: " + timer + "s";
+}, 1000);
 
   let grid = buatSolusi();
   solusi = grid.map(r => [...r]);
