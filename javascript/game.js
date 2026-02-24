@@ -23,6 +23,23 @@ export function startGame(boardElement, difficultySelect, hintUI) {
 
   let grid = buatSolusi();
   solusi = grid.map(r => [...r]);
+  console.log(checkValidSudoku(solusi));
+
+  function checkValidSudoku(board) {
+  for (let i = 0; i < 9; i++) {
+    let row = new Set();
+    let col = new Set();
+
+    for (let j = 0; j < 9; j++) {
+      if (row.has(board[i][j])) return false;
+      row.add(board[i][j]);
+
+      if (col.has(board[j][i])) return false;
+      col.add(board[j][i]);
+    }
+  }
+  return true;
+}
 
   let holes = getDifficulty(difficultySelect.value);
 
