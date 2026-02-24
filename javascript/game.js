@@ -13,6 +13,14 @@ export function startGame(boardElement, difficultySelect, hintUI) {
   clearInterval(interval);
   timer = 0;
 
+  const timerUI = document.getElementById("timer");
+  timerUI.innerText = "Time: 0s";
+
+  interval = setInterval(() => {
+    timer++;
+    timerUI.innerText = "Time: " + timer + "s";
+  }, 1000);
+
   let grid = buatSolusi();
   solusi = grid.map(r => [...r]);
 
@@ -70,7 +78,12 @@ export function checkAnswer() {
     }
   }
 
-  alert(benar ? "🎉 BENAR!" : "❌ Masih ada yang salah!");
+  if (benar) {
+    clearInterval(interval);
+    alert("🎉 BENAR! Waktu: " + timer + " detik");
+  } else {
+    alert("❌ Masih ada yang salah!");
+  }
 }
 
 export function giveHint(hintUI) {
