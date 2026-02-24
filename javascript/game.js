@@ -47,17 +47,15 @@ function getDifficulty(diff) {
 function validateInput(e) {
   const input = e.target;
   const value = input.value;
-  const [r, c] = input.id.split("-").map(Number);
+  const [row, col] = input.id.split("-").map(Number);
 
-  // hanya boleh 1-9
   if (!/^[1-9]$/.test(value)) {
     input.value = "";
     input.classList.remove("error", "correct");
     return;
   }
 
-  // cek ke solusi
-  if (parseInt(value) === solusi[r][c]) {
+  if (isValidMove(row, col, parseInt(value))) {
     input.classList.remove("error");
     input.classList.add("correct");
   } else {
@@ -84,6 +82,34 @@ export function checkAnswer() {
   } else {
     alert("❌ Masih ada yang salah!");
   }
+}
+
+function isValidMove(row, col, num) {
+  for (let i = 0; i < 9; i++) {
+    if (i !== col) {
+      let cell = document.getElementById(row + "-" + i);
+      if (parseInt(cell.value) === num) return false;
+    }
+
+    if (i !== row) {
+      let cell = document.getElementById(i + "-" + col);
+      if (parseInt(cell.value) === num) return false;
+    }
+  }
+
+  let boxRow = Math.floor(row / 3) * 3;
+  let boxCol = Math.floor(col / 3) * 3;
+
+  for (let r = boxRow; r < boxRow + 3; r++) {
+    for (let c = boxCol; c < boxCol + 3; c++) {
+      if (r !== row || c !== col) {
+        let cell = document.getElementById(r + "-" + c);
+        if (parseInt(cell.value) === num) return false;
+      }
+    }
+  }
+
+  return true;
 }
 
 export function giveHint(hintUI) {
