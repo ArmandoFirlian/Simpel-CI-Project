@@ -53,3 +53,13 @@ button, select {
   font-size: 18px;
   color: #00d4ff;
 }
+
+.error {
+  background: ffd4d !important;
+  color: white;
+}
+
+.correct { 
+  background: #4caf50 !important;
+  color: white;
+}
