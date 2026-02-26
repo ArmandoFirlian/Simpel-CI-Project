@@ -91,31 +91,44 @@ export function giveHint(hintUI) {
     return;
   }
 
-  let kandidat = [];
+  let best = null;
+  let minEmpty = 10;
 
   for (let r = 0; r < 9; r++) {
+    let emptyCount = 0;
+
     for (let c = 0; c < 9; c++) {
       let cell = document.getElementById(r + "-" + c);
+      if (!cell.disabled && cell.value === "") {
+        emptyCount++;
+      }
+    }
 
-      if (!cell.disabled && parseInt(cell.value) !== solusi[r][c]) {
-        kandidat.push({ r, c });
+    if (emptyCount > 0 && emptyCount < minEmpty) {
+      minEmpty = emptyCount;
+
+      for (let c = 0; c < 9; c++) {
+        let cell = document.getElementById(r + "-" + c);
+        if (!cell.disabled && parseInt(cell.value) !== solusi[r][c]) {
+          best = { r, c };
+          break;
+        }
       }
     }
   }
 
-  if (kandidat.length === 0) return;
+  if (!best) return;
 
-  let pick = kandidat[Math.floor(Math.random() * kandidat.length)];
-  let cell = document.getElementById(pick.r + "-" + pick.c);
+  let cell = document.getElementById(best.r + "-" + best.c);
 
-  cell.value = solusi[pick.r][pick.c];
-
-  cell.classList.remove("error", "correct");
+  cell.value = solusi[best.r][best.c];
+  cell.classList.remove("error", "correct", "conflict");
   cell.classList.add("hint");
-  recheckAllConflicts();
 
   hintLimit--;
   hintUI.innerText = "Hint tersisa: " + hintLimit;
+
+  recheckAllConflicts();
 }
 
 export function showMistakes() {
