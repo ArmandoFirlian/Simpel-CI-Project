@@ -13,33 +13,15 @@ export function startGame(boardElement, difficultySelect, hintUI) {
   clearInterval(interval);
   timer = 0;
 
-  const timerUI = document.getElementById("timer");
-  timerUI.innerText = "Time: 0s";
+  document.getElementById("timer").innerText = "Time: 0s";
 
   interval = setInterval(() => {
-  timer++;
-  document.getElementById("timer").innerText = "Time: " + timer + "s";
-}, 1000);
+    timer++;
+    document.getElementById("timer").innerText = "Time: " + timer + "s";
+  }, 1000);
 
   let grid = buatSolusi();
   solusi = grid.map(r => [...r]);
-  console.log(checkValidSudoku(solusi));
-
-  function checkValidSudoku(board) {
-  for (let i = 0; i < 9; i++) {
-    let row = new Set();
-    let col = new Set();
-
-    for (let j = 0; j < 9; j++) {
-      if (row.has(board[i][j])) return false;
-      row.add(board[i][j]);
-
-      if (col.has(board[j][i])) return false;
-      col.add(board[j][i]);
-    }
-  }
-  return true;
-}
 
   let holes = getDifficulty(difficultySelect.value);
 
@@ -72,7 +54,7 @@ function validateInput(e) {
     return;
   }
 
-  if (isValidMove(row, col, parseInt(value))) {
+  if (parseInt(value) === solusi[row][col]) {
     input.classList.remove("error");
     input.classList.add("correct");
   } else {
@@ -101,57 +83,32 @@ export function checkAnswer() {
   }
 }
 
-function isValidMove(row, col, num) {
-  for (let i = 0; i < 9; i++) {
-    if (i !== col) {
-      let cell = document.getElementById(row + "-" + i);
-      if (parseInt(cell.value) === num) return false;
-    }
-
-    if (i !== row) {
-      let cell = document.getElementById(i + "-" + col);
-      if (parseInt(cell.value) === num) return false;
-    }
-  }
-
-  let boxRow = Math.floor(row / 3) * 3;
-  let boxCol = Math.floor(col / 3) * 3;
-
-  for (let r = boxRow; r < boxRow + 3; r++) {
-    for (let c = boxCol; c < boxCol + 3; c++) {
-      if (r !== row || c !== col) {
-        let cell = document.getElementById(r + "-" + c);
-        if (parseInt(cell.value) === num) return false;
-      }
-    }
-  }
-
-  return true;
-}
-
 export function giveHint(hintUI) {
   if (hintLimit <= 0) {
     alert("Hint habis!");
     return;
   }
 
-  let kosong = [];
+  let kandidat = [];
 
   for (let r = 0; r < 9; r++) {
     for (let c = 0; c < 9; c++) {
       let cell = document.getElementById(r + "-" + c);
+
       if (!cell.disabled && parseInt(cell.value) !== solusi[r][c]) {
-        kosong.push({ r, c });
+        kandidat.push({ r, c });
       }
     }
   }
 
-  if (kosong.length === 0) return;
+  if (kandidat.length === 0) return;
 
-  let pick = kosong[Math.floor(Math.random() * kosong.length)];
+  let pick = kandidat[Math.floor(Math.random() * kandidat.length)];
   let cell = document.getElementById(pick.r + "-" + pick.c);
 
   cell.value = solusi[pick.r][pick.c];
+
+  cell.classList.remove("error", "correct");
   cell.classList.add("hint");
 
   hintLimit--;
