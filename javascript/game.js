@@ -118,13 +118,28 @@ export function giveHint(hintUI) {
   hintUI.innerText = "Hint tersisa: " + hintLimit;
 }
 
+export function showMistakes() {
+  clearAllConflicts(); // optional biar bersih dulu
+
+  for (let r = 0; r < 9; r++) {
+    for (let c = 0; c < 9; c++) {
+      let cell = document.getElementById(r + "-" + c);
+
+      if (!cell.disabled && cell.value !== "") {
+        if (parseInt(cell.value) !== solusi[r][c]) {
+          cell.classList.add("conflict");
+        }
+      }
+    }
+  }
+}
+
 function clearAllConflicts() {
   document.querySelectorAll(".conflict")
     .forEach(cell => cell.classList.remove("conflict"));
 }
 
 function checkConflicts(row, col) {
-  clearAllConflicts();
 
   const value = parseInt(document.getElementById(row + "-" + col).value);
   if (!value) return;
