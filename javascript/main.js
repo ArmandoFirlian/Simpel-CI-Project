@@ -1,4 +1,4 @@
-import { startGame, checkAnswer, giveHint } from "./game.js";
+import { startGame, checkAnswer, giveHint, showMistakes } from "./game.js";
 
 const board = document.getElementById("board");
 const difficulty = document.getElementById("difficulty");
@@ -49,5 +49,7 @@ document.getElementById("checkBtn")
 document.getElementById("hintBtn")
   .addEventListener("click", () => giveHint(hintUI));
 
+document.getElementById("mistakeBtn")
+  .addEventListener("click", showMistakes);
 // Start pertama kali
 startGame(board, difficulty, hintUI);
