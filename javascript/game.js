@@ -114,3 +114,50 @@ export function giveHint(hintUI) {
   hintLimit--;
   hintUI.innerText = "Hint tersisa: " + hintLimit;
 }
+
+function clearAllConflicts() {
+  document.querySelectorAll(".conflict")
+    .forEach(cell => cell.classList.remove("conflict"));
+}
+
+function checkConflicts(row, col) {
+  clearAllConflicts();
+
+  const value = parseInt(document.getElementById(row + "-" + col).value);
+  if (!value) return;
+
+  // cek row & col
+  for (let i = 0; i < 9; i++) {
+    if (i !== col) {
+      let cell = document.getElementById(row + "-" + i);
+      if (parseInt(cell.value) === value) {
+        cell.classList.add("conflict");
+        document.getElementById(row + "-" + col).classList.add("conflict");
+      }
+    }
+
+    if (i !== row) {
+      let cell = document.getElementById(i + "-" + col);
+      if (parseInt(cell.value) === value) {
+        cell.classList.add("conflict");
+        document.getElementById(row + "-" + col).classList.add("conflict");
+      }
+    }
+  }
+
+  // cek box 3x3
+  let boxRow = Math.floor(row / 3) * 3;
+  let boxCol = Math.floor(col / 3) * 3;
+
+  for (let r = boxRow; r < boxRow + 3; r++) {
+    for (let c = boxCol; c < boxCol + 3; c++) {
+      if (r !== row || c !== col) {
+        let cell = document.getElementById(r + "-" + c);
+        if (parseInt(cell.value) === value) {
+          cell.classList.add("conflict");
+          document.getElementById(row + "-" + col).classList.add("conflict");
+        }
+      }
+    }
+  }
+}
