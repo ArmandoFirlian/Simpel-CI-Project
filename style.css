@@ -109,3 +109,7 @@ button, select {
   from { transform: scale(0.9); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
+
+.conflict {
+  background-color: #ffb3b3 !important;
+}
