@@ -49,10 +49,11 @@ function validateInput(e) {
   const [row, col] = input.id.split("-").map(Number);
 
   if (!/^[1-9]$/.test(value)) {
-    input.value = "";
-    input.classList.remove("error", "correct");
-    return;
-  }
+  input.value = "";
+  input.classList.remove("error", "correct", "conflict");
+  clearAllConflicts();
+  return;
+}
 
   if (parseInt(value) === solusi[row][col]) {
     input.classList.remove("error");
@@ -61,6 +62,7 @@ function validateInput(e) {
     input.classList.remove("correct");
     input.classList.add("error");
   }
+  recheckAllConflicts();
 }
 
 export function checkAnswer() {
@@ -110,6 +112,7 @@ export function giveHint(hintUI) {
 
   cell.classList.remove("error", "correct");
   cell.classList.add("hint");
+  recheckAllConflicts();
 
   hintLimit--;
   hintUI.innerText = "Hint tersisa: " + hintLimit;
@@ -157,6 +160,19 @@ function checkConflicts(row, col) {
           cell.classList.add("conflict");
           document.getElementById(row + "-" + col).classList.add("conflict");
         }
+      }
+    }
+  }
+}
+
+function recheckAllConflicts() {
+  clearAllConflicts();
+
+  for (let r = 0; r < 9; r++) {
+    for (let c = 0; c < 9; c++) {
+      let cell = document.getElementById(r + "-" + c);
+      if (cell.value !== "") {
+        checkConflicts(r, c);
       }
     }
   }
