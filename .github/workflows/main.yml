@@ -1,36 +1,27 @@
-name: Build & Deploy Pages
+name: Deploy Pages
 
 on:
   push:
     branches:
-      - main  # jalankan saat push ke main
+      - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      # 1️⃣ Checkout repo
       - uses: actions/checkout@v3
 
-      # 2️⃣ Setup Node.js (jika pakai Node)
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
-      # 3️⃣ Build project (ubah sesuai project kamu)
-      - name: Build project
-        run: |
-          npm install
-          npm run build  # pastikan hasil build di folder 'build/'
-
-      # 4️⃣ Upload artifact
+      # Upload file statis
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: github-pages  # wajib sama dengan deploy
-          path: build/       # folder hasil build
+          name: github-pages
+          path: |
+            index.html
+            css/
+            js/
 
-      # 5️⃣ Deploy ke GitHub Pages
+      # Deploy ke GitHub Pages
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
         with:
