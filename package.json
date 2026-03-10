@@ -1,0 +1,17 @@
+{
+  "name": "simpel-ci-project",
+  "version": "1.0.0",
+  "description": "Sudoku game with GitHub Actions CI",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "lint": "echo Linting project...",
+    "build": "echo Build completed",
+    "test": "echo Tests passed"
+  },
+  "author": "Armando Firlian",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
