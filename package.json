@@ -15,7 +15,9 @@
     "express": "^4.19.2"
   },
   "scripts": {
-    "test": "jest"
+  "lint": "eslint .",
+  "build": "echo 'no build step'",
+  "test": "jest"
   }
 
 }
