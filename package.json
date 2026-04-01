@@ -18,6 +18,8 @@
   "lint": "eslint .",
   "build": "echo 'no build step'",
   "test": "jest"
+  },
+  "devDependencies": {
+    "eslint": "^8.47.0"
   }
-
 }
