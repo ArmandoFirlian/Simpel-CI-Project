@@ -5,19 +5,14 @@
   "main": "server.js",
   "scripts": {
     "dev": "node server.js",
-    "lint": "echo Linting project...",
-    "build": "echo Build completed",
-    "test": "echo Tests passed"
+    "lint": "eslint .",
+    "build": "echo 'no build step'",
+    "test": "jest"
   },
   "author": "Armando Firlian",
   "license": "MIT",
   "dependencies": {
     "express": "^4.19.2"
-  },
-  "scripts": {
-  "lint": "eslint .",
-  "build": "echo 'no build step'",
-  "test": "jest"
   },
   "devDependencies": {
     "eslint": "^8.47.0"
