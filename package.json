@@ -4,11 +4,12 @@
   "description": "Sudoku game with GitHub Actions CI",
   "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "dev": "node server.js",
     "lint": "eslint .",
     "build": "echo 'no build step'",
     "test": "jest"
-  },
+},
   "author": "Armando Firlian",
   "license": "MIT",
   "dependencies": {

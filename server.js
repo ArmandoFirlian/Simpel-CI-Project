@@ -10,6 +10,14 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "healthy",
+    uptime: process.uptime(),
+    timestamp: new Date()
+  });
+});
+
 app.listen(PORT, () => {
   console.log("Server running on port " + PORT);
 });
