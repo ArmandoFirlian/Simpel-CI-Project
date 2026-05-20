@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const path = require("path");
 
@@ -13,8 +14,8 @@ app.get("/", (req, res) => {
 app.get("/health", (req, res) => {
   res.status(200).json({
     status: "healthy",
-    uptime: process.uptime(),
-    timestamp: new Date()
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
   });
 });
 
