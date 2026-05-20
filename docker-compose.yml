@@ -21,3 +21,30 @@ services:
       POSTGRES_DB: sudoku_db
     ports:
       - "5432:5432"
+
+  prometheus:
+    image: prom/prometheus
+    container_name: sudoku-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    depends_on:
+      - web
+
+  grafana:
+    image: grafana/grafana
+    container_name: sudoku-grafana
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+
+volumes:
+  grafana-data:
